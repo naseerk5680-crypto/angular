@@ -1,6 +1,6 @@
 <!-- src/app/app.html -->
 <div class="container">
-  
+
   <!-- Header & Export Button -->
   <header class="header">
     <div>
@@ -17,10 +17,25 @@
         <span>Total Spent</span>
         <h3>₹{{ totalSpent | number:'1.2-2' }}</h3>
       </div>
+
+      <!-- Interactive Budget Box -->
       <div class="metric-box">
         <span>Monthly Budget</span>
-        <h3>₹{{ monthlyBudget | number:'1.2-2' }}</h3>
+
+        <!-- View Mode -->
+        <div *ngIf="!isEditingBudget" class="budget-display">
+          <h3>₹{{ monthlyBudget | number:'1.2-2' }}</h3>
+          <button class="btn-edit-budget" (click)="enableBudgetEdit()" title="Set New Budget">✏️ Edit</button>
+        </div>
+
+        <!-- Edit Mode -->
+        <div *ngIf="isEditingBudget" class="budget-edit-form">
+          <input type="number" [(ngModel)]="tempBudget" placeholder="Enter budget" class="budget-input">
+          <button class="btn-save-sm" (click)="saveBudget()">Save</button>
+          <button class="btn-cancel-sm" (click)="cancelBudgetEdit()">✕</button>
+        </div>
       </div>
+
       <div class="metric-box">
         <span>Remaining Budget</span>
         <h3 [style.color]="(monthlyBudget - totalSpent) < 0 ? 'var(--danger-red)' : 'var(--primary-teal)'">

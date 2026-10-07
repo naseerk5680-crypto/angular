@@ -19,8 +19,11 @@ export interface Expense {
   styleUrl: './app.css'
 })
 export class AppComponent implements OnInit {
-  // Budget & Filter settings
+  // Dynamic Budget Settings
   monthlyBudget: number = 25000;
+  isEditingBudget: boolean = false;
+  tempBudget: number = 25000;
+
   selectedCategoryFilter: string = 'All';
 
   // Form Fields
@@ -43,8 +46,34 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadExpenses();
+    this.loadBudget();
     if (this.expenses.length === 0) {
       this.loadSeedData();
+    }
+  }
+
+  // Budget Management
+  enableBudgetEdit(): void {
+    this.tempBudget = this.monthlyBudget;
+    this.isEditingBudget = true;
+  }
+
+  saveBudget(): void {
+    if (this.tempBudget && this.tempBudget > 0) {
+      this.monthlyBudget = Number(this.tempBudget);
+      localStorage.setItem('personal_budget', this.monthlyBudget.toString());
+    }
+    this.isEditingBudget = false;
+  }
+
+  cancelBudgetEdit(): void {
+    this.isEditingBudget = false;
+  }
+
+  loadBudget(): void {
+    const savedBudget = localStorage.getItem('personal_budget');
+    if (savedBudget) {
+      this.monthlyBudget = parseFloat(savedBudget);
     }
   }
 
@@ -95,6 +124,7 @@ export class AppComponent implements OnInit {
   }
 
   get budgetProgress(): number {
+    if (this.monthlyBudget <= 0) return 0;
     const percentage = (this.totalSpent / this.monthlyBudget) * 100;
     return Math.min(percentage, 100);
   }
@@ -138,7 +168,7 @@ export class AppComponent implements OnInit {
     document.body.removeChild(link);
   }
 
-  // Initial Seed Data for Demo Presentation
+  // Initial Seed Data
   loadSeedData(): void {
     this.expenses = [
       { id: '1', title: 'Monthly Grocery', amount: 3500, category: 'Food & Dining', date: '2026-10-01' },
