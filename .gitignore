@@ -1,0 +1,8 @@
+node_modules/
+mini/node_modules/
+mini/.angular/
+mini/dist/
+dist/
+.angular/
+.DS_Store
+npm-debug.log*
