@@ -1,0 +1,144 @@
+<!-- src/app/app.html -->
+<div class="container">
+  
+  <!-- Header & Export Button -->
+  <header class="header">
+    <div>
+      <h2>Personal Expense Tracker</h2>
+      <p>BSc IT Project • Smart Budget & Expense Monitor</p>
+    </div>
+    <button class="btn-export" (click)="exportToCSV()">📥 Export CSV</button>
+  </header>
+
+  <!-- Summary & Budget Progress Card -->
+  <section class="card budget-card">
+    <div class="metrics">
+      <div class="metric-box">
+        <span>Total Spent</span>
+        <h3>₹{{ totalSpent | number:'1.2-2' }}</h3>
+      </div>
+      <div class="metric-box">
+        <span>Monthly Budget</span>
+        <h3>₹{{ monthlyBudget | number:'1.2-2' }}</h3>
+      </div>
+      <div class="metric-box">
+        <span>Remaining Budget</span>
+        <h3 [style.color]="(monthlyBudget - totalSpent) < 0 ? 'var(--danger-red)' : 'var(--primary-teal)'">
+          ₹{{ (monthlyBudget - totalSpent) | number:'1.2-2' }}
+        </h3>
+      </div>
+    </div>
+
+    <!-- Budget Bar -->
+    <div class="progress-bar-container">
+      <div class="progress-label">
+        <span>Budget Utilization</span>
+        <span>{{ budgetProgress | number:'1.0-0' }}%</span>
+      </div>
+      <div class="progress-track">
+        <div 
+          class="progress-fill" 
+          [style.width.%]="budgetProgress"
+          [style.background-color]="budgetProgress >= 100 ? 'var(--danger-red)' : 'var(--primary-teal)'">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Grid: Add Form + Category Breakdown -->
+  <div class="grid-2">
+    
+    <!-- Add Expense Form -->
+    <section class="card">
+      <h3>➕ Add New Expense</h3>
+      <form (ngSubmit)="addExpense()" class="form">
+        <div class="form-group">
+          <label>Title</label>
+          <input type="text" [(ngModel)]="newTitle" name="title" placeholder="e.g. Groceries" required>
+        </div>
+
+        <div class="form-group">
+          <label>Amount (₹)</label>
+          <input type="number" [(ngModel)]="newAmount" name="amount" placeholder="e.g. 500" required>
+        </div>
+
+        <div class="form-group">
+          <label>Category</label>
+          <select [(ngModel)]="newCategory" name="category">
+            <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Date</label>
+          <input type="date" [(ngModel)]="newDate" name="date" required>
+        </div>
+
+        <button type="submit" class="btn-primary">Add Expense</button>
+      </form>
+    </section>
+
+    <!-- Native CSS Category Analytics -->
+    <section class="card">
+      <h3>📊 Category Breakdown</h3>
+      <div class="category-bars">
+        <div *ngFor="let cat of categories" class="cat-item">
+          <div class="cat-header">
+            <span>{{ cat }}</span>
+            <span>₹{{ getCategoryTotal(cat) }} ({{ getCategoryPercentage(cat) }}%)</span>
+          </div>
+          <div class="cat-track">
+            <div class="cat-fill" [style.width.%]="getCategoryPercentage(cat)"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Expenses Table with Category Filter -->
+  <section class="card table-card">
+    <div class="table-header">
+      <h3>📋 Expense History</h3>
+      
+      <!-- Category Filter -->
+      <div class="filter-box">
+        <label>Filter:</label>
+        <select [(ngModel)]="selectedCategoryFilter">
+          <option value="All">All Categories</option>
+          <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Date</th>
+            <th>Amount</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of filteredExpenses">
+            <td><strong>{{ item.title }}</strong></td>
+            <td><span class="badge">{{ item.category }}</span></td>
+            <td>{{ item.date }}</td>
+            <td class="amount-text">₹{{ item.amount | number:'1.2-2' }}</td>
+            <td>
+              <button class="btn-delete" (click)="deleteExpense(item.id)">Delete</button>
+            </td>
+          </tr>
+          <tr *ngIf="filteredExpenses.length === 0">
+            <td colspan="5" class="empty-state">No expenses found.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</div>
