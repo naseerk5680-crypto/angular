@@ -1,0 +1,98 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyNScZ9X9na/OHirLYOuJ78D",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/naseerk5680-crypto/angular/blob/main/task%204\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 1,
+      "metadata": {
+        "id": "NaK2CTIWxyJR",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "ceb06d5a-3fbe-4783-f00a-bb92e5c9fe29"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "--- ANALYZING CUSTOMER REVIEWS ---\n",
+            "\n",
+            "Review 1: \"Absolutely love this product! Best purchase I have made this year.\"\n",
+            "-> Classified Sentiment: Positive 😊 (Polarity Score: 0.81)\n",
+            "\n",
+            "Review 2: \"Terrible quality. It broke after just two days of use.\"\n",
+            "-> Classified Sentiment: Negative 😞 (Polarity Score: -1.00)\n",
+            "\n",
+            "Review 3: \"It is okay, nothing special. Does the job, but packaging was damaged.\"\n",
+            "-> Classified Sentiment: Positive 😊 (Polarity Score: 0.43)\n",
+            "\n",
+            "Review 4: \"Amazing customer service and fast delivery. Highly recommended!\"\n",
+            "-> Classified Sentiment: Positive 😊 (Polarity Score: 0.33)\n",
+            "\n",
+            "Review 5: \"Worst experience ever. Total waste of money and time.\"\n",
+            "-> Classified Sentiment: Negative 😞 (Polarity Score: -0.40)\n"
+          ]
+        }
+      ],
+      "source": [
+        "\n",
+        "# TASK 4: Sentiment Analysis\n",
+        "# We use TextBlob to classify customer reviews as positive, negative, or neutral\n",
+        "\n",
+        "from textblob import TextBlob\n",
+        "\n",
+        "# Sample customer reviews (similar to Amazon or social media comments)\n",
+        "reviews = [\n",
+        "    'Absolutely love this product! Best purchase I have made this year.',\n",
+        "    'Terrible quality. It broke after just two days of use.',\n",
+        "    'It is okay, nothing special. Does the job, but packaging was damaged.',\n",
+        "    'Amazing customer service and fast delivery. Highly recommended!',\n",
+        "    'Worst experience ever. Total waste of money and time.',\n",
+        "]\n",
+        "\n",
+        "print('--- ANALYZING CUSTOMER REVIEWS ---')\n",
+        "for i, review in enumerate(reviews, 1):\n",
+        "  # Analyze the text\n",
+        "  analysis = TextBlob(review)\n",
+        "  polarity = analysis.sentiment.polarity\n",
+        "\n",
+        "  # Classify based on the sentiment score\n",
+        "  if polarity > 0:\n",
+        "    sentiment = 'Positive 😊'\n",
+        "  elif polarity < 0:\n",
+        "    sentiment = 'Negative 😞'\n",
+        "  else:\n",
+        "    sentiment = 'Neutral 😐'\n",
+        "\n",
+        "  print(f'\\nReview {i}: \"{review}\"')\n",
+        "  print(f'-> Classified Sentiment: {sentiment} (Polarity Score: {polarity:.2f})')"
+      ]
+    }
+  ]
+}
